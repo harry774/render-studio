@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,26 +40,29 @@ const Contact = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl animate-fade-in">
-            <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">Get in Touch</p>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif mb-6 leading-tight">
-              Let's Bring Your Vision to Life
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Ready to start your project? Contact us today for a free consultation and discover how we can help
-              visualize your ideas.
-            </p>
-          </div>
+          <ScrollReveal>
+            <div className="max-w-3xl">
+              <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">Get in Touch</p>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif mb-6 leading-tight">
+                Let's Bring Your Vision to Life
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Ready to start your project? Contact us today for a free consultation and discover how we can help
+                visualize your ideas.
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Contact Section */}
       <section className="pb-24 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Contact Information */}
-            <div className="animate-fade-in" style={{ animationDelay: "100ms" }}>
-              <h2 className="text-3xl font-serif mb-8">Contact Information</h2>
+            <ScrollReveal direction="left">
+              <div>
+                <h2 className="text-3xl font-serif mb-8">Contact Information</h2>
 
               <div className="space-y-6 mb-12">
                 <div className="flex items-start space-x-4">
@@ -112,11 +116,13 @@ const Contact = () => {
                   </div>
                 </div>
               </div>
-            </div>
+              </div>
+            </ScrollReveal>
 
             {/* Contact Form */}
-            <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
-              <h2 className="text-3xl font-serif mb-8">Send us a Message</h2>
+            <ScrollReveal direction="right" delay={0.2}>
+              <div>
+                <h2 className="text-3xl font-serif mb-8">Send us a Message</h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -185,7 +191,8 @@ const Contact = () => {
                   Send Message
                 </Button>
               </form>
-            </div>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>

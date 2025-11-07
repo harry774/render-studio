@@ -52,7 +52,7 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-primary-foreground/10 transition-smooth"
+            className="md:hidden p-2 rounded-lg hover:bg-primary-foreground/10 transition-smooth z-50"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -61,14 +61,14 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-6 border-t border-primary-foreground/10 animate-fade-in">
-            <div className="flex flex-col space-y-4">
+          <div className="md:hidden fixed inset-0 top-20 bg-nav-bg z-40 animate-fade-in">
+            <div className="flex flex-col space-y-2 p-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`text-sm uppercase tracking-wider transition-smooth hover:text-primary-foreground px-4 py-2 rounded ${
+                  className={`text-base uppercase tracking-wider transition-smooth hover:text-primary-foreground px-4 py-3 rounded ${
                     isActive(link.path)
                       ? "text-primary-foreground bg-primary-foreground/10"
                       : "text-primary-foreground/70"
@@ -80,7 +80,8 @@ const Navigation = () => {
               <Button
                 asChild
                 variant="outline"
-                className="mx-4 bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-nav-bg"
+                size="lg"
+                className="mt-4 bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-nav-bg"
               >
                 <Link to="/contact" onClick={() => setIsOpen(false)}>
                   Get Started
