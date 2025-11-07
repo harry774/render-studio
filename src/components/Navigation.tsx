@@ -22,9 +22,13 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-serif font-semibold tracking-tight">
+            {/* <div className="text-2xl font-serif font-semibold tracking-tight">
               3D RENDERS
-            </div>
+            </div> */}
+            <img
+              src="/assets/nav-logo.svg" // update this path based on your actual logo file
+              alt="3D Renders Logo"
+              className="h-10 w-auto object-contain"/>
           </Link>
 
           {/* Desktop Navigation */}

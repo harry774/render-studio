@@ -1,11 +1,11 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
-
+/*
 @layer base {
   :root {
     --background: 36 33% 96%;
@@ -104,6 +104,176 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 36 33% 96%; /* Warm off-white */
+    --foreground: 30 5% 16%;  /* Deep charcoal brown */
+
+    --card: 30 15% 97%; 
+    --card-foreground: 30 5% 16%;
+
+    --popover: 30 15% 97%;
+    --popover-foreground: 30 5% 16%;
+
+    --primary: 30 6% 16%; /* Deep brown-black */
+    --primary-foreground: 36 33% 96%; /* Light text */
+
+    --secondary: 35 25% 85%; /* Soft beige */
+    --secondary-foreground: 30 5% 16%;
+
+    --muted: 35 25% 90%; /* Light beige-gray */
+    --muted-foreground: 30 8% 45%;
+
+    --accent: 32 30% 63%; /* Soft gold-beige */
+    --accent-foreground: 36 33% 96%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 36 33% 96%;
+
+    --border: 35 20% 85%; /* Light warm border */
+    --input: 35 20% 85%;
+    --ring: 30 6% 16%;
+
+    --radius: 1rem;
+    
+    --hero-text: 30 5% 16%;
+    --hero-accent: 35 25% 45%;
+    --nav-bg: 30 6% 16%;
+    --gradient-subtle: linear-gradient(135deg, hsl(36 33% 98%) 0%, hsl(35 25% 90%) 100%);
+    --shadow-elegant: 0 20px 60px -10px hsla(40, 7%, 16%, 0.1);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 35 33% 97%;
+    --sidebar-foreground: 30 5% 20%;
+    --sidebar-primary: 30 6% 16%;
+    --sidebar-primary-foreground: 36 33% 96%;
+    --sidebar-accent: 35 25% 90%;
+    --sidebar-accent-foreground: 30 6% 16%;
+    --sidebar-border: 35 20% 85%;
+    --sidebar-ring: 32 30% 63%;
+  }
+
+  .dark {
+    --background: 30 6% 12%;
+    --foreground: 36 33% 96%;
+
+    --card: 30 6% 14%;
+    --card-foreground: 36 33% 96%;
+
+    --popover: 30 6% 14%;
+    --popover-foreground: 36 33% 96%;
+
+    --primary: 36 33% 96%;
+    --primary-foreground: 30 6% 12%;
+
+    --secondary: 32 25% 25%;
+    --secondary-foreground: 36 33% 96%;
+
+    --muted: 32 25% 25%;
+    --muted-foreground: 35 20% 65%;
+
+    --accent: 32 30% 63%;
+    --accent-foreground: 30 6% 12%;
+
+    --destructive: 0 62% 35%;
+    --destructive-foreground: 36 33% 96%;
+
+    --border: 32 20% 25%;
+    --input: 32 20% 25%;
+    --ring: 36 33% 96%;
+    
+    --hero-text: 36 33% 96%;
+    --hero-accent: 35 25% 70%;
+    --nav-bg: 30 6% 14%;
+    --gradient-subtle: linear-gradient(135deg, hsl(30 6% 12%) 0%, hsl(32 20% 20%) 100%);
+    --shadow-elegant: 0 20px 60px -10px hsl(30 5% 5% / 0.5);
+    
+    --sidebar-background: 30 6% 12%;
+    --sidebar-foreground: 36 33% 96%;
+    --sidebar-primary: 32 30% 63%;
+    --sidebar-primary-foreground: 30 6% 12%;
+    --sidebar-accent: 32 25% 20%;
+    --sidebar-accent-foreground: 36 33% 96%;
+    --sidebar-border: 32 25% 20%;
+    --sidebar-ring: 32 30% 63%;
   }
 }
 

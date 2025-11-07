@@ -42,10 +42,10 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8">
-            <p className="text-xs uppercase tracking-wider text-primary-foreground/70 mb-2">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2">
               {project.category}
             </p>
-            <h2 className="text-4xl md:text-5xl font-serif text-primary-foreground">
+            <h2 className="text-4xl md:text-5xl font-serif text-muted-foreground">
               {project.title}
             </h2>
           </div>
