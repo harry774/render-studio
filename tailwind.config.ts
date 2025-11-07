@@ -47,6 +47,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        hero: {
+          text: "hsl(var(--hero-text))",
+          accent: "hsl(var(--hero-accent))",
+        },
+        nav: {
+          bg: "hsl(var(--nav-bg))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,6 +69,12 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "1.5rem",
+        "2xl": "2rem",
+      },
+      fontFamily: {
+        serif: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
