@@ -13,7 +13,8 @@ interface ProjectDialogProps {
   project: {
     title: string;
     category: string;
-    image: string;
+    image1: string;
+    image2: string;
     description: string;
     details?: string;
     client?: string;
@@ -36,7 +37,7 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
 
         <div className="relative w-full h-[400px] md:h-[500px]">
           <img
-            src={project.image}
+            src={project.image1}
             alt={project.title}
             className="w-full h-full object-cover"
           />
@@ -95,14 +96,14 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div className="aspect-video bg-muted rounded-lg overflow-hidden">
               <img
-                src={project.image}
+                src={project.image1}
                 alt={`${project.title} detail 1`}
                 className="w-full h-full object-cover hover:scale-105 transition-smooth"
               />
             </div>
             <div className="aspect-video bg-muted rounded-lg overflow-hidden">
               <img
-                src={project.image}
+                src={project.image2}
                 alt={`${project.title} detail 2`}
                 className="w-full h-full object-cover hover:scale-105 transition-smooth"
               />

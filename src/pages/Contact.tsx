@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -16,14 +17,44 @@ const Contact = () => {
     phone: "",
     message: "",
   });
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // EmailJS configuration - replace TEMPLATE_ID with your template id
+  const SERVICE_ID = "service_btyx9yp";
+  const TEMPLATE_ID = "template_v0ef5sa"; // <-- replace with your actual template ID
+  const PUBLIC_KEY = "5YBMvyFonfMZb39kj";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setIsSending(true);
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        },
+        PUBLIC_KEY
+      );
+
+      toast({
+        title: "Message Sent!",
+        description: "We'll get back to you within 24 hours.",
+      });
+
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS error:", error);
+      toast({
+        title: "Message failed to send",
+        description: "Please try again later or contact us directly.",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -32,7 +63,11 @@ const Contact = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
+// Load Calendly script
+  const script = document.createElement("script");
+  script.src = "https://assets.calendly.com/assets/external/widget.js";
+  script.async = true;
+  document.body.appendChild(script);
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -81,7 +116,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                    <p className="text-muted-foreground">+1 (437) 982-6367</p>
                     <p className="text-muted-foreground">Mon-Fri 9am-6pm EST</p>
                   </div>
                 </div>
@@ -186,8 +221,8 @@ const Contact = () => {
                   />
                 </div>
 
-                <Button type="submit" size="lg" className="w-full">
-                  Send Message
+                <Button type="submit" size="lg" className="w-full" disabled={isSending}>
+                  {isSending ? "Sending..." : "Send Message"}
                 </Button>
               </form>
               </div>
@@ -195,6 +230,18 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      {/* Calendly Meeting Option - Centered on the whole page */}
+      <div className="flex flex-col items-center justify-center w-full mt-16 mb-24">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
+          Schedule a Meeting
+        </h2>
+        <div
+          className="calendly-inline-widget bg-background rounded-2xl shadow-lg"
+          data-url="https://calendly.com/nirali-215becig006/30min"
+          style={{ minWidth: "320px", height: "700px", width: "100%", maxWidth: "600px", backgroundColor: "inherit" }}
+        ></div>
+      </div>
 
       <Footer />
     </div>
