@@ -25,6 +25,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: dist/
-          server-dir: ../domains/3drendersstudio.com/public_html/
+          local_path: dist/
+          remote_path: /public_html/
+          sftp_only: true
           log-level: verbose
