@@ -162,7 +162,7 @@ const Index = () => {
               },
             ].map((project, index) => (
               <ScrollReveal key={project.title} delay={index * 0.15}>
-                <Link to="/portfolio" className="group block">
+                <Link to="/portfolio" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group block">
                   <div className="relative overflow-hidden rounded-2xl mb-4 aspect-[4/3]">
                     <img
                       src={project.image}
