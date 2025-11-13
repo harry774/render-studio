@@ -49,7 +49,7 @@ const Navigation = () => {
               variant="outline"
               className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-nav-bg transition-smooth"
             >
-              <Link to="/contact">Get Started</Link>
+              <Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Get Started</Link>
             </Button>
           </div>
 

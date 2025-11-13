@@ -41,13 +41,13 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="text-base px-8">
-                  <Link to="/contact">
+                  <Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                     Free Consultation
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-base px-8">
-                  <Link to="/portfolio">View Portfolio</Link>
+                  <Link to="/portfolio" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>View Portfolio</Link>
                 </Button>
               </div>
             </motion.div>
@@ -125,7 +125,7 @@ const Index = () => {
                   rendering to tastefully tell your story.
                 </p>
                 <Button asChild size="lg" variant="outline">
-                  <Link to="/services">Explore Our Services</Link>
+                  <Link to="/services" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Explore Our Services</Link>
                 </Button>
               </div>
             </ScrollReveal>
@@ -181,7 +181,7 @@ const Index = () => {
 
           <div className="text-center">
             <Button asChild size="lg">
-              <Link to="/portfolio">View All Projects</Link>
+              <Link to="/portfolio" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>View All Projects</Link>
             </Button>
           </div>
         </div>
@@ -195,7 +195,7 @@ const Index = () => {
             Let's collaborate to bring your architectural vision to life with stunning 3D visualizations
           </p>
           <Button asChild size="lg" className="text-base px-8">
-            <Link to="/contact">
+            <Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               Get Started Today
               <ArrowRight className="ml-2 w-4 h-4" />
             </Link>

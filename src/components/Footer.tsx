@@ -21,22 +21,22 @@ const Footer = () => {
             <h4 className="text-sm uppercase tracking-wider font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth">
+                <Link to="/" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth">
+                <Link to="/services" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/portfolio" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth">
+                <Link to="/portfolio" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                   Portfolio
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth">
+                <Link to="/contact" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                   Contact
                 </Link>
               </li>

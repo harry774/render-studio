@@ -94,7 +94,7 @@ const Services = () => {
             Let's discuss how we can bring your vision to life with our expert 3D rendering services.
           </p>
           <Button asChild size="lg" className="text-base px-8">
-            <Link to="/contact">Get in Touch</Link>
+            <Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Get in Touch</Link>
           </Button>
         </div>
       </section>
