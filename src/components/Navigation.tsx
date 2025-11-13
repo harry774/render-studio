@@ -37,6 +37,7 @@ const Navigation = () => {
               <Link
                 key={link.path}
                 to={link.path}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className={`text-sm uppercase tracking-wider transition-smooth hover:text-muted ${
                   isActive(link.path) ? "text-primary-foreground" : "text-primary-foreground/70"
                 }`}
@@ -71,7 +72,7 @@ const Navigation = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => { setIsOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className={`text-base uppercase tracking-wider transition-smooth hover:text-primary-foreground px-4 py-3 rounded ${
                     isActive(link.path)
                       ? "text-primary-foreground bg-primary-foreground/10"
