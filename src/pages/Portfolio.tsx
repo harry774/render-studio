@@ -6,15 +6,30 @@ import { useState } from "react";
 
 const Portfolio = () => {
   const [filter, setFilter] = useState("all");
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
 
-  const projects = [
+  type Project = {
+    id: number;
+    title: string;
+    category: string;
+    images: string[];
+    description: string;
+    details?: string;
+    client?: string;
+    year?: string;
+    services?: string[];
+  };
+
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const projects: Project[] = [
     {
       id: 1,
       title: "Modern Kitchen Design",
       category: "interior",
-      image1: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1200&q=80",
+        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80",
+      ],
       description: "Contemporary kitchen with sleek cabinetry and modern fixtures",
       details:
         "This project showcases a complete kitchen renovation with emphasis on clean lines, functional design, and premium materials. The space features custom cabinetry, integrated appliances, and sophisticated lighting that creates an inviting atmosphere perfect for both cooking and entertaining.",
@@ -26,8 +41,10 @@ const Portfolio = () => {
       id: 2,
       title: "Luxury Living Room",
       category: "interior",
-      image1: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200&q=80",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80",
+      ],
       description: "Elegant residential interior space with sophisticated furnishings",
       details:
         "A luxurious living room design that balances comfort with elegance. Rich textures, carefully curated furniture pieces, and a refined color palette create a space that feels both welcoming and prestigious.",
@@ -39,8 +56,10 @@ const Portfolio = () => {
       id: 3,
       title: "Commercial Office Space",
       category: "commercial",
-      image1: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
+        "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80",
+      ],
       description: "Modern office interior design with collaborative spaces",
       details:
         "A contemporary office environment designed to foster productivity and collaboration. Open-plan workspaces, private meeting areas, and thoughtful lighting create an inspiring professional atmosphere.",
@@ -52,8 +71,10 @@ const Portfolio = () => {
       id: 4,
       title: "Residential Exterior",
       category: "exterior",
-      image1: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
+        "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&q=80",
+      ],
       description: "Contemporary home exterior visualization with landscaping",
       details:
         "A stunning residential exterior that seamlessly blends modern architecture with natural surroundings. Clean architectural lines, quality materials, and integrated landscaping create a harmonious and impressive street presence.",
@@ -65,8 +86,10 @@ const Portfolio = () => {
       id: 5,
       title: "Master Bedroom Suite",
       category: "interior",
-      image1: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80",
+        "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80",
+      ],
       description: "Luxurious bedroom interior with spa-like atmosphere",
       details:
         "A serene master bedroom retreat featuring calming colors, premium textiles, and thoughtful details. The design prioritizes comfort and relaxation while maintaining sophisticated aesthetics.",
@@ -78,8 +101,10 @@ const Portfolio = () => {
       id: 6,
       title: "Commercial Building",
       category: "exterior",
-      image1: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&q=80",
+      ],
       description: "Modern commercial architecture with iconic design",
       details:
         "A striking commercial building that makes a bold architectural statement. The design features innovative facade treatments, sustainable materials, and impressive scale that commands attention.",
@@ -91,8 +116,10 @@ const Portfolio = () => {
       id: 7,
       title: "Restaurant Interior",
       category: "commercial",
-      image1: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80",
+        "https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?w=1200&q=80",
+      ],
       description: "Contemporary dining space design with ambient lighting",
       details:
         "An inviting restaurant interior that creates the perfect dining atmosphere. Thoughtful layout, custom lighting design, and carefully selected finishes work together to enhance the culinary experience.",
@@ -104,8 +131,13 @@ const Portfolio = () => {
       id: 8,
       title: "Bathroom Design",
       category: "interior",
-      image1: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&q=80",
-      image2: "https://images.unsplash.com/photo-1644421439741-712c7fde7e95?w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=80",
+        "https://images.unsplash.com/photo-1644421439741-712c7fde7e95?w=1200&q=80",
+        "/assets/bathroom-1.jpg",
+        "/assets/bathroom-2.jpg",
+        "/assets/bathroom-3.jpg",
+      ],
       description: "Modern bathroom visualization with spa elements",
       details:
         "A sophisticated bathroom design that transforms daily routines into luxurious experiences. Premium fixtures, elegant materials, and spa-inspired elements create a personal wellness sanctuary.",
@@ -176,7 +208,7 @@ const Portfolio = () => {
                 >
                   <div className="relative overflow-hidden rounded-2xl mb-4 aspect-[4/3]">
                     <img
-                      src={project.image1}
+                      src={project.images[0]}
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-smooth duration-700"
                     />
