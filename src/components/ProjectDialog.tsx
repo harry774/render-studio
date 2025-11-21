@@ -29,10 +29,15 @@ interface ProjectDialogProps {
 const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && lightboxOpen) setLightboxOpen(false);
+      if (!lightboxOpen) return;
+      if (e.key === "Escape") return closeLightbox();
+      if (e.key === "ArrowRight") return nextImage();
+      if (e.key === "ArrowLeft") return prevImage();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -48,6 +53,8 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
 
   const openLightbox = (e: React.MouseEvent | undefined, src: string) => {
     e && e.stopPropagation();
+    const idx = imgs.indexOf(src);
+    setLightboxIndex(idx >= 0 ? idx : 0);
     setLightboxSrc(src);
     setLightboxOpen(true);
   };
@@ -56,6 +63,28 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
   const closeLightbox = () => {
     setLightboxOpen(false);
     setLightboxSrc(null);
+  };
+
+  const prevImage = () => {
+    if (!imgs || imgs.length === 0) return;
+    const newIndex = (lightboxIndex - 1 + imgs.length) % imgs.length;
+    setIsFading(true);
+    setTimeout(() => {
+      setLightboxIndex(newIndex);
+      setLightboxSrc(imgs[newIndex]);
+      setIsFading(false);
+    }, 200);
+  };
+
+  const nextImage = () => {
+    if (!imgs || imgs.length === 0) return;
+    const newIndex = (lightboxIndex + 1) % imgs.length;
+    setIsFading(true);
+    setTimeout(() => {
+      setLightboxIndex(newIndex);
+      setLightboxSrc(imgs[newIndex]);
+      setIsFading(false);
+    }, 200);
   };
 
   if (!project) return null;
@@ -154,29 +183,62 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
                 }}
               />
 
-              <div
-                className="relative z-[100000] max-w-[90vw] max-h-[90vh] p-4 pointer-events-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeLightbox();
-                  }}
-                  className="absolute right-2 top-2 z-[100001] rounded-full bg-background/80 p-2 hover:bg-background transition-smooth pointer-events-auto"
-                  aria-label="Close image"
-                  data-testid="lightbox-close"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+                  <div
+                    className="relative z-[100000] max-w-[90vw] max-h-[90vh] p-4 pointer-events-auto"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        closeLightbox();
+                      }}
+                      className="absolute right-2 top-2 z-[100001] rounded-full bg-background/80 p-2 hover:bg-background transition-smooth pointer-events-auto"
+                      aria-label="Close image"
+                      data-testid="lightbox-close"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
 
-                <img
-                  src={lightboxSrc}
-                  alt="Enlarged project"
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transform transition-all duration-300"
-                />
-              </div>
+                  <div className="flex items-center justify-center max-w-[90vw] max-h-[90vh] p-4">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto mr-4"
+                      aria-label="Previous image"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+                      </svg>
+                    </button>
+
+                    <div className="max-w-full max-h-[80vh]">
+                      <img
+                        key={lightboxSrc}
+                        src={lightboxSrc}
+                        alt="Enlarged project"
+                        className={`max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transform transition-all duration-300 ${isFading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto ml-4"
+                      aria-label="Next image"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6" />
+                      </svg>
+                    </button>
+                  </div>
+                  </div>
             </div>,
             document.body
           )}
