@@ -132,7 +132,7 @@ const Portfolio = () => {
       title: "Bathroom Design",
       category: "interior",
       images: [
-        "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=80",
+        "/assets/bathroom-5test.jpg",
         "/assets/bathroom-4test.jpg",
         "/assets/bathroom-1test.jpg",
         "/assets/bathroom-2test.jpg",

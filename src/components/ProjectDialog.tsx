@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+// image normalization removed to restore original sizing behavior
 
 interface Project {
   title: string;
@@ -28,9 +29,11 @@ interface ProjectDialogProps {
 
 const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number>(0);
-  const [isFading, setIsFading] = useState(false);
+  const [animating, setAnimating] = useState(false);
+  const [nextIndex, setNextIndex] = useState<number | null>(null);
+  const [direction, setDirection] = useState<"left" | "right" | null>(null);
+  const [slidePlay, setSlidePlay] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -55,36 +58,46 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
     e && e.stopPropagation();
     const idx = imgs.indexOf(src);
     setLightboxIndex(idx >= 0 ? idx : 0);
-    setLightboxSrc(src);
     setLightboxOpen(true);
   };
 
-  // Close immediately and clear src to avoid race conditions
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    setLightboxSrc(null);
-  };
+  const closeLightbox = () => setLightboxOpen(false);
 
   const prevImage = () => {
     if (!imgs || imgs.length === 0) return;
     const newIndex = (lightboxIndex - 1 + imgs.length) % imgs.length;
-    setIsFading(true);
-    setTimeout(() => {
+    // slide right (new image comes from left)
+    setNextIndex(newIndex);
+    setDirection("right");
+    setAnimating(true);
+    setSlidePlay(false);
+    // kick off transition on next tick
+    window.setTimeout(() => setSlidePlay(true), 20);
+    window.setTimeout(() => {
       setLightboxIndex(newIndex);
-      setLightboxSrc(imgs[newIndex]);
-      setIsFading(false);
-    }, 200);
+      setAnimating(false);
+      setNextIndex(null);
+      setDirection(null);
+      setSlidePlay(false);
+    }, 520);
   };
 
   const nextImage = () => {
     if (!imgs || imgs.length === 0) return;
     const newIndex = (lightboxIndex + 1) % imgs.length;
-    setIsFading(true);
-    setTimeout(() => {
+    // slide left (new image comes from right)
+    setNextIndex(newIndex);
+    setDirection("left");
+    setAnimating(true);
+    setSlidePlay(false);
+    window.setTimeout(() => setSlidePlay(true), 20);
+    window.setTimeout(() => {
       setLightboxIndex(newIndex);
-      setLightboxSrc(imgs[newIndex]);
-      setIsFading(false);
-    }, 200);
+      setAnimating(false);
+      setNextIndex(null);
+      setDirection(null);
+      setSlidePlay(false);
+    }, 520);
   };
 
   if (!project) return null;
@@ -172,73 +185,72 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
           </div>
         </div>
 
-        {lightboxOpen && lightboxSrc &&
+        {lightboxOpen && imgs.length > 0 &&
           createPortal(
             <div className="fixed inset-0 z-[99999] flex items-center justify-center pointer-events-auto">
               <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+                className="absolute inset-0 bg-black transition-opacity duration-300"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeLightbox();
                 }}
               />
 
-                  <div
-                    className="relative z-[100000] max-w-[90vw] max-h-[90vh] p-4 pointer-events-auto"
-                    onClick={(e) => e.stopPropagation()}
+              <div
+                className="relative z-[100000] max-w-[90vw] max-h-[90vh] p-4 pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    closeLightbox();
+                  }}
+                  className="absolute right-2 top-2 z-[100001] rounded-full bg-background/80 p-2 hover:bg-background transition-smooth pointer-events-auto"
+                  aria-label="Close image"
+                  data-testid="lightbox-close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevImage();
+                    }}
+                    className="absolute left-6 top-1/2 z-[100002] -translate-y-1/2 rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto"
+                    aria-label="Previous image"
                   >
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        closeLightbox();
-                      }}
-                      className="absolute right-2 top-2 z-[100001] rounded-full bg-background/80 p-2 hover:bg-background transition-smooth pointer-events-auto"
-                      aria-label="Close image"
-                      data-testid="lightbox-close"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+                    </svg>
+                  </button>
 
-                  <div className="flex items-center justify-center max-w-[90vw] max-h-[90vh] p-4">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        prevImage();
-                      }}
-                      className="rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto mr-4"
-                      aria-label="Previous image"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-                      </svg>
-                    </button>
-
-                    <div className="max-w-full max-h-[80vh]">
-                      <img
-                        key={lightboxSrc}
-                        src={lightboxSrc}
-                        alt="Enlarged project"
-                        className={`max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transform transition-all duration-300 ${isFading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
-                      />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        nextImage();
-                      }}
-                      className="rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto ml-4"
-                      aria-label="Next image"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6" />
-                      </svg>
-                    </button>
+                  <div className="w-full h-full px-12 flex items-center justify-center">
+                    <img
+                      src={imgs[lightboxIndex]}
+                      alt={`Enlarged ${lightboxIndex + 1}`}
+                      className="w-full h-full object-contain rounded-lg shadow-2xl"
+                    />
                   </div>
-                  </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextImage();
+                    }}
+                    className="absolute right-6 top-1/2 z-[100002] -translate-y-1/2 rounded-full bg-background/60 p-2 hover:bg-background transition-smooth pointer-events-auto"
+                    aria-label="Next image"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M9 6l6 6-6 6" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>,
             document.body
           )}
