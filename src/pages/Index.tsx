@@ -10,8 +10,10 @@ const Index = () => {
   const features = [
     "Photorealistic Rendering",
     "Fast Turnaround Times",
-    "Unlimited Revisions",
     "Professional Team",
+    "Affordable Quotes",
+    "Client Focused",
+    "Proven Results",
   ];
 
   return (
@@ -82,7 +84,7 @@ const Index = () => {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 md:gap-8">
             {features.map((feature, index) => (
               <ScrollReveal key={feature} delay={index * 0.15}>
                 <div className="bg-card p-6 rounded-xl text-center hover:shadow-lg transition-smooth">

@@ -133,10 +133,10 @@ const Portfolio = () => {
       category: "interior",
       images: [
         "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&q=80",
-        "https://images.unsplash.com/photo-1644421439741-712c7fde7e95?w=1200&q=80",
-        "/assets/bathroom-1.jpg",
-        "/assets/bathroom-2.jpg",
-        "/assets/bathroom-3.jpg",
+        "/assets/bathroom-4test.jpg",
+        "/assets/bathroom-1test.jpg",
+        "/assets/bathroom-2test.jpg",
+        "/assets/bathroom-3test.jpg",
       ],
       description: "Modern bathroom visualization with spa elements",
       details:
