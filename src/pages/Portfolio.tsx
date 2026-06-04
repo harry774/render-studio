@@ -49,8 +49,8 @@ const Portfolio = () => {
       title: "Luxury Living Room",
       category: "interior",
       images: [
-        "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200&q=80",
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80",
+        "/assets/living-room-1.png",
+        "/assets/living-room-2.png",
       ],
       description: "Elegant residential interior space with sophisticated furnishings",
       details:
@@ -64,8 +64,12 @@ const Portfolio = () => {
       title: "Commercial Office Space",
       category: "commercial",
       images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
-        "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80",
+        "/assets/commercial-1.png",
+        "/assets/commercial-2.png",
+        "/assets/commercial-5.png",
+        "/assets/commercial-6.png",
+        "/assets/commercial-7.png",
+        "/assets/commercial-8.png",
       ],
       description: "Modern office interior design with collaborative spaces",
       details:
@@ -79,8 +83,12 @@ const Portfolio = () => {
       title: "Residential Exterior",
       category: "exterior",
       images: [
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
-        "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&q=80",
+        "/assets/exterior-1.png",
+        "/assets/exterior-2.png",
+        "/assets/exterior-5.png",
+        "/assets/exterior-6.png",
+        "/assets/exterior-7.png",
+        "/assets/exterior-8.png",
       ],
       description: "Contemporary home exterior visualization with landscaping",
       details:
@@ -117,8 +125,12 @@ const Portfolio = () => {
       title: "Commercial Building",
       category: "exterior",
       images: [
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
-        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&q=80",
+        "/assets/exterior-3.png",
+        "/assets/exterior-4.png",
+        "/assets/exterior-9.png",
+        "/assets/exterior-10.png",
+        "/assets/exterior-11.png",
+        "/assets/exterior-12.png",
       ],
       description: "Modern commercial architecture with iconic design",
       details:
@@ -132,8 +144,12 @@ const Portfolio = () => {
       title: "Restaurant Interior",
       category: "commercial",
       images: [
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80",
-        "https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?w=1200&q=80",
+        "/assets/restaurant-1.png",
+        "/assets/restaurant-2.png",
+        "/assets/restaurant-3.png",
+        "/assets/restaurant-4.png",
+        "/assets/restaurant-5.png",
+        "/assets/restaurant-6.png",
       ],
       description: "Contemporary dining space design with ambient lighting",
       details:

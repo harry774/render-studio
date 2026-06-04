@@ -1,346 +1,143 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-/*
-@layer base {
-  :root {
-    --background: 36 33% 96%;
-    --foreground: 240 8% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 8% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 8% 15%;
-
-    --primary: 240 6% 25%;
-    --primary-foreground: 36 33% 96%;
-
-    --secondary: 40 20% 88%;
-    --secondary-foreground: 240 8% 15%;
-
-    --muted: 40 20% 92%;
-    --muted-foreground: 240 5% 45%;
-
-    --accent: 240 6% 20%;
-    --accent-foreground: 36 33% 96%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 36 33% 96%;
-
-    --border: 40 15% 85%;
-    --input: 40 15% 85%;
-    --ring: 240 6% 25%;
-
-    --radius: 1rem;
-    
-    --hero-text: 240 8% 15%;
-    --hero-accent: 40 15% 35%;
-    --nav-bg: 240 8% 15%;
-    --gradient-subtle: linear-gradient(135deg, hsl(36 33% 98%) 0%, hsl(40 20% 94%) 100%);
-    --shadow-elegant: 0 20px 60px -10px hsl(240 8% 15% / 0.1);
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 240 8% 10%;
-    --foreground: 36 33% 96%;
-
-    --card: 240 8% 12%;
-    --card-foreground: 36 33% 96%;
-
-    --popover: 240 8% 12%;
-    --popover-foreground: 36 33% 96%;
-
-    --primary: 36 33% 96%;
-    --primary-foreground: 240 8% 15%;
-
-    --secondary: 240 6% 18%;
-    --secondary-foreground: 36 33% 96%;
-
-    --muted: 240 6% 18%;
-    --muted-foreground: 40 15% 65%;
-
-    --accent: 36 33% 96%;
-    --accent-foreground: 240 8% 15%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 36 33% 96%;
-
-    --border: 240 6% 20%;
-    --input: 240 6% 20%;
-    --ring: 36 33% 96%;
-    
-    --hero-text: 36 33% 96%;
-    --hero-accent: 40 20% 70%;
-    --nav-bg: 240 8% 12%;
-    --gradient-subtle: linear-gradient(135deg, hsl(240 8% 10%) 0%, hsl(240 6% 15%) 100%);
-    --shadow-elegant: 0 20px 60px -10px hsl(0 0% 0% / 0.5);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
-  }
-}
-
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
-  
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
-  }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.5s ease-out forwards;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  .transition-smooth {
-    transition: var(--transition-smooth);
-  }
-} */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/*
+  Design System — Dark Cinematic Luxury
+  Deep charcoal-navy base. Warm cream text. Gold accents.
+  Surfaces layered with subtle warmth. All colors HSL.
 */
 
 @layer base {
   :root {
-    --background: 36 33% 96%; /* Warm off-white */
-    --foreground: 30 5% 16%;  /* Deep charcoal brown */
+    --background: 220 18% 8%;
+    --foreground: 38 25% 88%;
 
-    --card: 30 15% 97%; 
-    --card-foreground: 30 5% 16%;
+    --card: 220 16% 11%;
+    --card-foreground: 38 25% 88%;
 
-    --popover: 30 15% 97%;
-    --popover-foreground: 30 5% 16%;
+    --popover: 220 16% 11%;
+    --popover-foreground: 38 25% 88%;
 
-    --primary: 30 6% 16%; /* Deep brown-black */
-    --primary-foreground: 36 33% 96%; /* Light text */
+    /* Primary = warm gold — CTA buttons, accent elements */
+    --primary: 36 62% 50%;
+    --primary-foreground: 220 18% 8%;
 
-    --secondary: 35 25% 85%; /* Soft beige */
-    --secondary-foreground: 30 5% 16%;
+    --secondary: 220 14% 14%;
+    --secondary-foreground: 38 25% 88%;
 
-    --muted: 35 25% 90%; /* Light beige-gray */
-    --muted-foreground: 30 8% 45%;
+    --muted: 220 14% 13%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 32 30% 63%; /* Soft gold-beige */
-    --accent-foreground: 36 33% 96%;
+    /* Accent = warm gold */
+    --accent: 36 72% 48%;
+    --accent-foreground: 220 18% 8%;
 
-    --destructive: 0 65% 55%;
-    --destructive-foreground: 36 33% 96%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 38 25% 88%;
 
-    --border: 35 20% 85%; /* Light warm border */
-    --input: 35 20% 85%;
-    --ring: 30 6% 16%;
+    --border: 220 12% 16%;
+    --input: 220 14% 14%;
+    --ring: 36 62% 50%;
 
-    --radius: 1rem;
-    
-    --hero-text: 30 5% 16%;
-    --hero-accent: 35 25% 45%;
-    --nav-bg: 30 6% 16%;
-    --gradient-subtle: linear-gradient(135deg, hsl(36 33% 98%) 0%, hsl(35 25% 90%) 100%);
-    --shadow-elegant: 0 20px 60px -10px hsla(40, 7%, 16%, 0.1);
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius: 0.75rem;
 
-    --sidebar-background: 35 33% 97%;
-    --sidebar-foreground: 30 5% 20%;
-    --sidebar-primary: 30 6% 16%;
-    --sidebar-primary-foreground: 36 33% 96%;
-    --sidebar-accent: 35 25% 90%;
-    --sidebar-accent-foreground: 30 6% 16%;
-    --sidebar-border: 35 20% 85%;
-    --sidebar-ring: 32 30% 63%;
-  }
+    /* === Elevated dark surfaces === */
+    --surface-dark: 220 20% 6%;
+    --surface-dark-elevated: 220 16% 10%;
+    --surface-dark-foreground: 38 25% 92%;
+    --surface-dark-muted: 220 8% 55%;
+    --surface-dark-border: 220 12% 18%;
 
-  .dark {
-    --background: 30 6% 12%;
-    --foreground: 36 33% 96%;
+    --hero-text: 38 25% 92%;
+    --hero-accent: 36 72% 55%;
+    --nav-bg: 220 20% 5%;
 
-    --card: 30 6% 14%;
-    --card-foreground: 36 33% 96%;
+    --gradient-gold: linear-gradient(135deg, hsl(33 55% 40%) 0%, hsl(38 80% 58%) 50%, hsl(33 55% 40%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220 18% 8% / 0) 0%, hsl(220 18% 8%) 100%);
+    --shadow-elegant: 0 25px 60px -15px hsl(0 0% 0% / 0.45);
+    --shadow-soft: 0 8px 30px -10px hsl(0 0% 0% / 0.35);
+    --shadow-glow: 0 0 60px -10px hsl(36 72% 48% / 0.2);
+    --transition-smooth: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 
-    --popover: 30 6% 14%;
-    --popover-foreground: 36 33% 96%;
-
-    --primary: 36 33% 96%;
-    --primary-foreground: 30 6% 12%;
-
-    --secondary: 32 25% 25%;
-    --secondary-foreground: 36 33% 96%;
-
-    --muted: 32 25% 25%;
-    --muted-foreground: 35 20% 65%;
-    --muted-foregound-portfolio: 60 23.3% 5.5%;
-
-    --accent: 32 30% 63%;
-    --accent-foreground: 30 6% 12%;
-
-    --destructive: 0 62% 35%;
-    --destructive-foreground: 36 33% 96%;
-
-    --border: 32 20% 25%;
-    --input: 32 20% 25%;
-    --ring: 36 33% 96%;
-    
-    --hero-text: 36 33% 96%;
-    --hero-accent: 35 25% 70%;
-    --nav-bg: 30 6% 14%;
-    --gradient-subtle: linear-gradient(135deg, hsl(30 6% 12%) 0%, hsl(32 20% 20%) 100%);
-    --shadow-elegant: 0 20px 60px -10px hsl(30 5% 5% / 0.5);
-    
-    --sidebar-background: 30 6% 12%;
-    --sidebar-foreground: 36 33% 96%;
-    --sidebar-primary: 32 30% 63%;
-    --sidebar-primary-foreground: 30 6% 12%;
-    --sidebar-accent: 32 25% 20%;
-    --sidebar-accent-foreground: 36 33% 96%;
-    --sidebar-border: 32 25% 20%;
-    --sidebar-ring: 32 30% 63%;
+    --sidebar-background: 220 18% 8%;
+    --sidebar-foreground: 38 25% 88%;
+    --sidebar-primary: 36 62% 50%;
+    --sidebar-primary-foreground: 220 18% 8%;
+    --sidebar-accent: 220 14% 14%;
+    --sidebar-accent-foreground: 38 25% 88%;
+    --sidebar-border: 220 12% 16%;
+    --sidebar-ring: 36 62% 50%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  * { @apply border-border; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-weight: 400;
   }
+
+  ::selection {
+    background: hsl(36 62% 50% / 0.3);
+    color: hsl(38 25% 95%);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: hsl(220 18% 6%); }
+  ::-webkit-scrollbar-thumb { background: hsl(220 10% 22%); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(36 40% 40%); }
 }
 
 @layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+  .transition-smooth { transition: var(--transition-smooth); }
+  .text-balance { text-wrap: balance; }
+
+  .surface-dark { background-color: hsl(var(--surface-dark)); color: hsl(var(--surface-dark-foreground)); }
+  .surface-dark-elevated { background-color: hsl(var(--surface-dark-elevated)); color: hsl(var(--surface-dark-foreground)); }
+  .text-on-dark { color: hsl(var(--surface-dark-foreground)); }
+  .text-on-dark-muted { color: hsl(var(--surface-dark-muted)); }
+  .border-on-dark { border-color: hsl(var(--surface-dark-border)); }
+
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s linear infinite;
   }
-  
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
-  }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.5s ease-out forwards;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+
+  .gold-divider { background: linear-gradient(90deg, transparent, hsl(36 72% 48% / 0.35), transparent); }
+
+  .shadow-elegant { box-shadow: var(--shadow-elegant); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+
+  .animate-fade-in { animation: fadeIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .animate-slide-up { animation: slideUp 0.9s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes shimmer { 0% { background-position: 200% 50%; } 100% { background-position: -200% 50%; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  .transition-smooth {
-    transition: var(--transition-smooth);
   }
 }

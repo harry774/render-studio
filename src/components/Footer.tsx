@@ -1,83 +1,94 @@
-import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+
+const handleAnchor = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  history.replaceState(null, "", `#${id}`);
+};
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div>
-            <h3 className="text-2xl font-serif font-semibold mb-4">3D RENDERS</h3>
-            <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Expert 3D modeling, rendering, and design services for architectural visualization and creative projects.
+    <footer className="relative surface-dark overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+          <div className="lg:col-span-5">
+            <img
+              src="/assets/nav-logo.svg"
+              alt="3D Renders Studio"
+              className="h-11 w-auto mb-6"
+            />
+            <p className="text-white/55 leading-relaxed max-w-md mb-6 text-sm">
+              Cinematic 3D visualizations for architects, developers and
+              interior designers. Toronto-based, working nationally.
             </p>
+            <button
+              onClick={() => handleAnchor("contact")}
+              className="group inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-white hover:text-white/70 transition-smooth cursor-pointer"
+            >
+              Start a project
+              <ArrowUpRight className="w-3.5 h-3.5 transition-smooth group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-sm uppercase tracking-wider font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/services" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link to="/portfolio" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  Portfolio
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-smooth" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  Contact
-                </Link>
-              </li>
+          <div className="lg:col-span-2">
+            <h4 className="text-[10px] uppercase tracking-[0.28em] text-white/40 mb-4">Navigate</h4>
+            <ul className="space-y-2.5">
+              {["home", "services", "portfolio", "process", "about-us", "blog", "contact"].map((id) => (
+                <li key={id}>
+                  <button
+                    onClick={() => handleAnchor(id)}
+                    className="text-sm text-white/60 hover:text-white transition-smooth cursor-pointer capitalize"
+                  >
+                    {id === "about-us" ? "About Us" : id}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
-          <div>
-            <h4 className="text-sm uppercase tracking-wider font-semibold mb-4">Services</h4>
-            <ul className="space-y-2 text-sm text-primary-foreground/70">
+          <div className="lg:col-span-2">
+            <h4 className="text-[10px] uppercase tracking-[0.28em] text-white/40 mb-4">Services</h4>
+            <ul className="space-y-2.5 text-sm text-white/60">
               <li>Interior Rendering</li>
               <li>Exterior Visualization</li>
               <li>Architectural Design</li>
               <li>3D Modeling</li>
+              <li>2D Drawings</li>
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-sm uppercase tracking-wider font-semibold mb-4">Contact</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start space-x-3 text-sm text-primary-foreground/70">
-                <Mail size={16} className="mt-1 flex-shrink-0" />
-                <span>info@3drendersstudio.com</span>
+          <div className="lg:col-span-3">
+            <h4 className="text-[10px] uppercase tracking-[0.28em] text-white/40 mb-4">Contact</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a href="mailto:info@3drendersstudio.com" className="flex items-start gap-2 text-white/60 hover:text-white transition-smooth cursor-pointer">
+                  <Mail size={14} className="mt-0.5 flex-shrink-0" />
+                  <span>info@3drendersstudio.com</span>
+                </a>
               </li>
-              <li className="flex items-start space-x-3 text-sm text-primary-foreground/70">
-                <Phone size={16} className="mt-1 flex-shrink-0" />
-                <span>+1 (437) 982-6367</span>
+              <li>
+                <a href="tel:+14379826367" className="flex items-start gap-2 text-white/60 hover:text-white transition-smooth cursor-pointer">
+                  <Phone size={14} className="mt-0.5 flex-shrink-0" />
+                  <span>+1 (437) 982-6367</span>
+                </a>
               </li>
-              <li className="flex items-start space-x-3 text-sm text-primary-foreground/70">
-                <MapPin size={16} className="mt-1 flex-shrink-0" />
-                <span>Toronto, ON, Canada</span>
+              <li className="flex items-start gap-2 text-white/60">
+                <MapPin size={14} className="mt-0.5 flex-shrink-0" />
+                <span>Toronto, ON · Canada</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 pt-8">
-          <p className="text-center text-sm text-primary-foreground/70">
-            © {currentYear} 3D Renders Studio. All rights reserved.
-          </p>
+        <div className="border-t border-white/8 pt-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-white/35">
+            <p>© {year} 3D Renders Studio</p>
+            <p>Toronto · Serving Canada</p>
+          </div>
         </div>
       </div>
     </footer>
