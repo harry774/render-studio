@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { createPortal } from "react-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { toWebp } from "@/lib/img";
 
 interface Project {
   title: string;
@@ -70,12 +71,16 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
                 className="break-inside-avoid overflow-hidden rounded-xl cursor-zoom-in group"
                 onClick={() => setLightboxIndex(idx)}
               >
-                <img
-                  src={img}
-                  alt={`${project.title} ${idx + 1}`}
-                  loading="lazy"
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <picture>
+                  <source srcSet={toWebp(img, "thumb")} type="image/webp" />
+                  <img
+                    src={img}
+                    alt={`${project.title} ${idx + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </picture>
               </div>
             ))}
           </div>
@@ -122,11 +127,15 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
                 onClick={(e) => e.stopPropagation()}
                 style={{ pointerEvents: "all" }}
               >
-                <img
-                  src={imgs[lightboxIndex]}
-                  alt={`Enlarged ${lightboxIndex + 1}`}
-                  className="max-w-full max-h-[84vh] object-contain rounded-lg shadow-2xl"
-                />
+                <picture>
+                  <source srcSet={toWebp(imgs[lightboxIndex])} type="image/webp" />
+                  <img
+                    src={imgs[lightboxIndex]}
+                    alt={`Enlarged ${lightboxIndex + 1}`}
+                    decoding="async"
+                    className="max-w-full max-h-[84vh] object-contain rounded-lg shadow-2xl"
+                  />
+                </picture>
                 <div className="mt-3 text-white/50 text-xs tracking-widest">
                   {lightboxIndex + 1} / {imgs.length}
                 </div>

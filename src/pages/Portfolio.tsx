@@ -2,6 +2,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProjectDialog from "@/components/ProjectDialog";
+import { toWebp } from "@/lib/img";
 import { useState } from "react";
 
 const Portfolio = () => {
@@ -127,8 +128,6 @@ const Portfolio = () => {
       images: [
         "/assets/exterior-3.png",
         "/assets/exterior-4.png",
-        "/assets/exterior-9.png",
-        "/assets/exterior-10.png",
         "/assets/exterior-11.png",
         "/assets/exterior-12.png",
       ],
@@ -138,25 +137,6 @@ const Portfolio = () => {
       client: "Commercial Developer",
       year: "2024",
       services: ["Exterior Visualization", "Architectural Rendering", "Lighting Studies"],
-    },
-    {
-      id: 7,
-      title: "Restaurant Interior",
-      category: "commercial",
-      images: [
-        "/assets/restaurant-1.png",
-        "/assets/restaurant-2.png",
-        "/assets/restaurant-3.png",
-        "/assets/restaurant-4.png",
-        "/assets/restaurant-5.png",
-        "/assets/restaurant-6.png",
-      ],
-      description: "Contemporary dining space design with ambient lighting",
-      details:
-        "An inviting restaurant interior that creates the perfect dining atmosphere. Thoughtful layout, custom lighting design, and carefully selected finishes work together to enhance the culinary experience.",
-      client: "Fine Dining Restaurant",
-      year: "2023",
-      services: ["Commercial Design", "3D Rendering", "Lighting Design"],
     },
     {
       id: 8,
@@ -256,11 +236,16 @@ const Portfolio = () => {
                   onClick={() => setSelectedProject(project)}
                 >
                   <div className="relative overflow-hidden rounded-2xl mb-4 aspect-[4/3]">
-                    <img
-                      src={project.images[0]}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-smooth duration-700"
-                    />
+                    <picture>
+                      <source srcSet={toWebp(project.images[0], "thumb")} type="image/webp" />
+                      <img
+                        src={project.images[0]}
+                        alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-smooth duration-700"
+                      />
+                    </picture>
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-smooth flex items-end p-6">
                       <p className="text-primary-foreground text-sm font-medium">View Details →</p>
                     </div>

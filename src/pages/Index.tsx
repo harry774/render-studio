@@ -39,6 +39,7 @@ import Typewriter from "@/components/Typewriter";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { toWebp } from "@/lib/img";
 
 interface Project {
   id: number;
@@ -124,8 +125,6 @@ const projects: Project[] = [
     images: [
       "/assets/exterior-3.png",
       "/assets/exterior-4.png",
-      "/assets/exterior-9.png",
-      "/assets/exterior-10.png",
       "/assets/exterior-11.png",
       "/assets/exterior-12.png",
     ],
@@ -154,25 +153,6 @@ const projects: Project[] = [
     client: "Tech Startup",
     year: "2023",
     services: ["Commercial Design", "3D Visualization", "Space Planning"],
-  },
-  {
-    id: 7,
-    title: "Restaurant Interior",
-    category: "commercial",
-    images: [
-      "/assets/restaurant-1.png",
-      "/assets/restaurant-2.png",
-      "/assets/restaurant-3.png",
-      "/assets/restaurant-4.png",
-      "/assets/restaurant-5.png",
-      "/assets/restaurant-6.png",
-    ],
-    description: "Contemporary dining space design with ambient lighting",
-    details:
-      "An inviting restaurant interior that creates the perfect dining atmosphere. Thoughtful layout, custom lighting design, and carefully selected finishes work together to enhance the culinary experience.",
-    client: "Fine Dining Restaurant",
-    year: "2023",
-    services: ["Commercial Design", "3D Rendering", "Lighting Design"],
   },
   {
     id: 8,
@@ -718,12 +698,15 @@ const Index = ({ initialHash }: IndexProps) => {
             className="absolute right-0 top-0 bottom-0 w-[65%]"
             style={{ maskImage: "linear-gradient(to right, transparent 0%, black 28%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)" }}
           >
-            <img
-              src="/assets/kitchen-1.png"
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-cover object-center"
-            />
+            <picture>
+              <source srcSet={toWebp("/assets/kitchen-1.png")} type="image/webp" />
+              <img
+                src="/assets/kitchen-1.png"
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-cover object-center"
+              />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_18%_8%/0.35)] via-[hsl(220_18%_8%/0.15)] to-transparent" />
           </div>
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[hsl(220_18%_8%)] to-transparent" />
@@ -846,12 +829,16 @@ const Index = ({ initialHash }: IndexProps) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <ScrollReveal direction="left" className="lg:col-span-5">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-elegant">
-              <img
-                src="/assets/bedroom-4.png"
-                alt="Luxury bedroom render"
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-              />
+              <picture>
+                <source srcSet={toWebp("/assets/bedroom-4.png")} type="image/webp" />
+                <img
+                  src="/assets/bedroom-4.png"
+                  alt="Luxury bedroom render"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
               {/* Floating badge */}
               <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-[hsl(216_50%_15%/0.75)] backdrop-blur-md border border-white/15">
@@ -1014,12 +1001,16 @@ const Index = ({ initialHash }: IndexProps) => {
                   className="group block w-full text-left cursor-pointer"
                 >
                   <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-card mb-5 shadow-soft">
-                    <img
-                      src={p.images[0]}
-                      alt={p.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
-                    />
+                    <picture>
+                      <source srcSet={toWebp(p.images[0], "thumb")} type="image/webp" />
+                      <img
+                        src={p.images[0]}
+                        alt={p.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                      />
+                    </picture>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-60 group-hover:opacity-90 transition-smooth" />
 
                     {/* Badge */}
@@ -1207,12 +1198,16 @@ const Index = ({ initialHash }: IndexProps) => {
                   className="group relative rounded-2xl bg-card border border-border overflow-hidden shadow-soft transition-smooth hover:border-primary/30 hover:shadow-elegant hover:-translate-y-1 cursor-pointer"
                 >
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                    <picture>
+                      <source srcSet={toWebp(post.image, "thumb")} type="image/webp" />
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+                    </picture>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-accent/90 text-background text-[10px] uppercase tracking-[0.18em] font-semibold">
                       {post.category}
@@ -1619,7 +1614,10 @@ const Index = ({ initialHash }: IndexProps) => {
 
               {/* Hero image */}
               <div className="relative aspect-[16/7] overflow-hidden">
-                <img src={selectedBlog.image} alt={selectedBlog.title} className="w-full h-full object-cover" />
+                <picture>
+                  <source srcSet={toWebp(selectedBlog.image)} type="image/webp" />
+                  <img src={selectedBlog.image} alt={selectedBlog.title} decoding="async" className="w-full h-full object-cover" />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <span className="inline-block px-3 py-1 rounded-full bg-accent/90 text-background text-[10px] uppercase tracking-[0.18em] font-semibold mb-4">
