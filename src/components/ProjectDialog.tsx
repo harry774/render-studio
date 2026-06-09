@@ -44,6 +44,17 @@ const ProjectDialog = ({ isOpen, onClose, project }: ProjectDialogProps) => {
     return () => { document.body.style.overflow = prev ?? ""; };
   }, [isOpen]);
 
+  // Warm the browser cache with the full-res lightbox images the moment the
+  // dialog opens, so clicking a thumb / using the arrows is instant instead of
+  // waiting on a fresh network download each time.
+  useEffect(() => {
+    if (!isOpen || !project) return;
+    (project.images || []).forEach((img) => {
+      const pre = new Image();
+      pre.src = toWebp(img);
+    });
+  }, [isOpen, project]);
+
   if (!project) return null;
   const imgs = project.images || [];
 
