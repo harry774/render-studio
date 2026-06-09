@@ -35,6 +35,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProjectDialog from "@/components/ProjectDialog";
+import CalendlyEmbed from "@/components/CalendlyEmbed";
 import Typewriter from "@/components/Typewriter";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -649,15 +650,6 @@ const Index = ({ initialHash }: IndexProps) => {
     }
   }, [initialHash]);
 
-  // Calendly script once
-  useEffect(() => {
-    if (document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) return;
-    const script = document.createElement("script");
-    script.src = "https://assets.calendly.com/assets/external/widget.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
   const filtered = filter === "all" ? projects : projects.filter((p) => p.category === filter);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -704,6 +696,8 @@ const Index = ({ initialHash }: IndexProps) => {
                 src="/assets/kitchen-1.png"
                 alt=""
                 aria-hidden="true"
+                width={1600}
+                height={1067}
                 className="w-full h-full object-cover object-center"
               />
             </picture>
@@ -834,6 +828,8 @@ const Index = ({ initialHash }: IndexProps) => {
                 <img
                   src="/assets/bedroom-4.png"
                   alt="Luxury bedroom render"
+                  width={1000}
+                  height={1250}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
@@ -1006,6 +1002,8 @@ const Index = ({ initialHash }: IndexProps) => {
                       <img
                         src={p.images[0]}
                         alt={p.title}
+                        width={800}
+                        height={1000}
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
@@ -1203,6 +1201,8 @@ const Index = ({ initialHash }: IndexProps) => {
                       <img
                         src={post.image}
                         alt={post.title}
+                        width={800}
+                        height={450}
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -1555,11 +1555,7 @@ const Index = ({ initialHash }: IndexProps) => {
                 </h3>
               </div>
               <div className="rounded-2xl overflow-hidden border border-border bg-card shadow-soft">
-                <div
-                  className="calendly-inline-widget"
-                  data-url="https://calendly.com/nirali-215becig006/30min?background_color=161b24&text_color=e8dcc8&primary_color=c68a2e"
-                  style={{ minWidth: "320px", height: "700px", width: "100%" }}
-                />
+                <CalendlyEmbed dataUrl="https://calendly.com/nirali-215becig006/30min?background_color=161b24&text_color=e8dcc8&primary_color=c68a2e" />
               </div>
             </div>
           </ScrollReveal>
