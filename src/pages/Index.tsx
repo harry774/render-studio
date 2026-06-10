@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+  useInView,
+  AnimatePresence,
+  MotionConfig,
+  animate,
+} from "framer-motion";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -15,7 +25,6 @@ import {
   PenTool,
   Layers,
   CheckCircle2,
-  Star,
   Quote,
   Play,
   Send,
@@ -23,17 +32,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Calendar,
-  Users,
-  Award,
-  Target,
   ExternalLink,
-  Plus,
-  Minus,
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import ImageReveal from "@/components/ImageReveal";
 import ProjectDialog from "@/components/ProjectDialog";
 import CalendlyEmbed from "@/components/CalendlyEmbed";
 import Typewriter from "@/components/Typewriter";
@@ -499,6 +504,154 @@ const filters = [
   { id: "commercial", label: "Commercial" },
 ];
 
+/* Gold eyebrow tick — draws itself in when the section header scrolls into view */
+const Tick = ({ origin = "left" }: { origin?: "left" | "right" }) => (
+  <motion.span
+    initial={{ scaleX: 0 }}
+    whileInView={{ scaleX: 1 }}
+    viewport={{ once: true, margin: "-60px" }}
+    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+    className={`h-px w-10 bg-accent ${origin === "left" ? "origin-left" : "origin-right"}`}
+  />
+);
+
+/* Stat value that counts up the first time it enters the viewport — "500+" → 0…500+ */
+const CountUp = ({ value, className = "" }: { value: string; className?: string }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const reduceMotion = useReducedMotion();
+  const match = value.match(/^(\d+)(.*)$/);
+  const target = match ? parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : "";
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!isInView || !match) return;
+    if (reduceMotion) {
+      setDisplay(target);
+      return;
+    }
+    const controls = animate(0, target, {
+      duration: 1.6,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInView, target, reduceMotion]);
+
+  if (!match) return <span className={className}>{value}</span>;
+
+  return (
+    <span ref={ref} className={className}>
+      {display}
+      {suffix}
+    </span>
+  );
+};
+
+/* A node on the process timeline — ignites gold as the drawn line reaches it */
+const ProcessNode = ({
+  progress,
+  threshold,
+  reduceMotion,
+}: {
+  progress: ReturnType<typeof useSpring>;
+  threshold: number;
+  reduceMotion: boolean | null;
+}) => {
+  const opacity = useTransform(progress, [threshold, threshold + 0.08], [0, 1]);
+  const scale = useTransform(progress, [threshold, threshold + 0.08], [0.4, 1]);
+  return (
+    <div className="relative">
+      <span className="absolute left-0 top-1/2 -mt-1 w-2 h-2 rounded-full bg-border" />
+      <motion.span
+        style={reduceMotion ? {} : { opacity, scale }}
+        className="absolute left-0 top-1/2 -mt-1 w-2 h-2 rounded-full bg-accent shadow-glow"
+      />
+    </div>
+  );
+};
+
+const ProcessSection = () => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start 0.85", "end 0.6"] });
+  const lineProgress = useSpring(scrollYProgress, { stiffness: 70, damping: 22, restDelta: 0.001 });
+
+  return (
+    <section
+      id="process"
+      className="relative py-28 lg:py-36 px-6 lg:px-10 bg-muted/40 border-y border-border overflow-hidden"
+    >
+      {/* subtle glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto">
+        <ScrollReveal>
+          <div className="max-w-3xl mb-20">
+            <div className="flex items-center gap-3 mb-6">
+              <Tick />
+              <span className="text-[10px] uppercase tracking-[0.32em] text-accent">The Process</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance mb-6">
+              Predictable, <em className="text-gradient-gold not-italic font-medium">repeatable</em> craft.
+            </h2>
+            <p className="text-foreground/65 leading-relaxed max-w-2xl">
+              Four stages — same on every project, whether it's a single bathroom or a 32-unit
+              pre-construction launch.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div ref={trackRef} className="relative">
+          {/* Timeline — a gold hairline draws itself across as you scroll */}
+          <div className="relative h-2 mb-10 hidden lg:block" aria-hidden="true">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-border" />
+            <motion.div
+              style={{ scaleX: reduceMotion ? 1 : lineProgress }}
+              className="absolute inset-x-0 top-1/2 h-px origin-left bg-gradient-to-r from-accent/40 via-accent to-accent"
+            />
+            <div className="absolute inset-0 grid grid-cols-4">
+              {processSteps.map((step, i) => (
+                <ProcessNode
+                  key={step.step}
+                  progress={lineProgress}
+                  threshold={i / 4 + 0.015}
+                  reduceMotion={reduceMotion}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-2xl overflow-hidden shadow-soft">
+            {processSteps.map((step, i) => (
+              <ScrollReveal key={step.step} delay={i * 0.1}>
+                <div className="group relative h-full bg-card p-8 transition-smooth hover:bg-background">
+                  <motion.span
+                    initial={{ color: "hsla(36, 72%, 48%, 0.18)" }}
+                    whileInView={{ color: "hsla(36, 72%, 48%, 0.7)" }}
+                    viewport={{ once: true, margin: "-140px" }}
+                    transition={{ duration: 0.9, delay: 0.25 + i * 0.18, ease: "easeOut" }}
+                    className="font-serif text-6xl absolute top-6 right-6"
+                  >
+                    {step.step}
+                  </motion.span>
+                  <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center mb-6">
+                    <step.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="font-serif text-2xl mb-3">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const getVisibleTestimonials = (startIndex: number) => {
   const result = [];
   for (let i = 0; i < 3; i++) {
@@ -509,13 +662,20 @@ const getVisibleTestimonials = (startIndex: number) => {
 
 const TestimonialsCarousel = () => {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const reduceMotion = useReducedMotion();
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
+      setDirection(1);
       setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 4500);
+  }, []);
+
+  const pauseTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
   }, []);
 
   useEffect(() => {
@@ -524,6 +684,7 @@ const TestimonialsCarousel = () => {
   }, [resetTimer]);
 
   const go = (dir: "prev" | "next") => {
+    setDirection(dir === "next" ? 1 : -1);
     setCurrent((prev) => dir === "next"
       ? (prev + 1) % testimonials.length
       : (prev - 1 + testimonials.length) % testimonials.length
@@ -540,7 +701,7 @@ const TestimonialsCarousel = () => {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
+                <Tick />
                 <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Client Words</span>
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance">
@@ -566,31 +727,36 @@ const TestimonialsCarousel = () => {
           </div>
         </ScrollReveal>
 
-        <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {visible.map((t) => (
-              <figure
-                key={t.name}
-                className="relative h-full p-8 lg:p-10 rounded-2xl bg-card border border-border shadow-soft transition-smooth hover:border-primary/30 hover:shadow-elegant animate-fade-in"
+        <div className="relative" onMouseEnter={pauseTimer} onMouseLeave={resetTimer}>
+          <motion.div
+            drag={reduceMotion ? false : "x"}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.12}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -60) go("next");
+              else if (info.offset.x > 60) go("prev");
+            }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 cursor-grab active:cursor-grabbing"
+          >
+            {visible.map((t, idx) => (
+              <motion.figure
+                key={`${current}-${t.name}`}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: direction * 48 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.55, delay: idx * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                className="relative h-full p-8 lg:p-10 rounded-2xl bg-card border border-border shadow-soft transition-smooth hover:border-primary/30 hover:shadow-elegant"
               >
                 <Quote className="w-8 h-8 text-primary/30 mb-6" />
                 <blockquote className="font-serif text-lg md:text-xl leading-snug text-foreground mb-8">
                   "{t.quote}"
                 </blockquote>
-                <figcaption className="flex items-center justify-between pt-6 border-t border-border">
-                  <div>
-                    <div className="font-medium text-sm text-foreground">{t.name}</div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">{t.role}</div>
-                  </div>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <Star key={idx} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
+                <figcaption className="pt-6 border-t border-border">
+                  <div className="font-medium text-sm text-foreground">{t.name}</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">{t.role}</div>
                 </figcaption>
-              </figure>
+              </motion.figure>
             ))}
-          </div>
+          </motion.div>
 
           <div className="flex items-center justify-center gap-2 mt-10">
             {testimonials.map((_, idx) => (
@@ -675,6 +841,7 @@ const Index = ({ initialHash }: IndexProps) => {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
 
@@ -684,11 +851,15 @@ const Index = ({ initialHash }: IndexProps) => {
         ref={heroRef}
         className="relative min-h-screen w-full bg-background flex flex-col items-center justify-center overflow-hidden"
       >
-        {/* Hero background image — fades from left, desktop only */}
+        {/* Hero background image — fades from left, desktop only, gentle parallax on scroll */}
         <div className="hidden md:block absolute inset-0 z-0 pointer-events-none">
-          <div
+          <motion.div
             className="absolute right-0 top-0 bottom-0 w-[65%]"
-            style={{ maskImage: "linear-gradient(to right, transparent 0%, black 28%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)" }}
+            style={{
+              maskImage: "linear-gradient(to right, transparent 0%, black 28%)",
+              WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 28%)",
+              ...(reduceMotion ? {} : { y: heroY, scale: heroScale, opacity: heroOpacity }),
+            }}
           >
             <picture>
               <source srcSet={toWebp("/assets/kitchen-1.png")} type="image/webp" />
@@ -702,7 +873,7 @@ const Index = ({ initialHash }: IndexProps) => {
               />
             </picture>
             <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_18%_8%/0.35)] via-[hsl(220_18%_8%/0.15)] to-transparent" />
-          </div>
+          </motion.div>
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[hsl(220_18%_8%)] to-transparent" />
         </div>
 
@@ -716,7 +887,7 @@ const Index = ({ initialHash }: IndexProps) => {
           >
             <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.08] tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               We create{" "}
-              <span className="text-gradient-gold italic">
+              <span className="text-gradient-gold-bright italic">
                 <Typewriter
                   phrases={[
                     "stunning renders",
@@ -776,7 +947,7 @@ const Index = ({ initialHash }: IndexProps) => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-2xl overflow-hidden shadow-soft">
             {stats.map((s) => (
               <div key={s.label} className="bg-card p-6 text-center">
-                <div className="font-serif text-3xl lg:text-4xl text-primary">{s.value}</div>
+                <CountUp value={s.value} className="block font-serif text-3xl lg:text-4xl text-primary" />
                 <div className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                   {s.label}
                 </div>
@@ -823,18 +994,20 @@ const Index = ({ initialHash }: IndexProps) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <ScrollReveal direction="left" className="lg:col-span-5">
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-elegant">
-              <picture>
-                <source srcSet={toWebp("/assets/bedroom-4.png")} type="image/webp" />
-                <img
-                  src="/assets/bedroom-4.png"
-                  alt="Luxury bedroom render"
-                  width={1000}
-                  height={1250}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </picture>
+              <ImageReveal>
+                <picture>
+                  <source srcSet={toWebp("/assets/bedroom-4.png")} type="image/webp" />
+                  <img
+                    src="/assets/bedroom-4.png"
+                    alt="Luxury bedroom render"
+                    width={1000}
+                    height={1250}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </ImageReveal>
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
               {/* Floating badge */}
               <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-[hsl(216_50%_15%/0.75)] backdrop-blur-md border border-white/15">
@@ -848,7 +1021,7 @@ const Index = ({ initialHash }: IndexProps) => {
 
           <ScrollReveal direction="right" delay={0.15} className="lg:col-span-7">
             <div className="flex items-center gap-3 mb-6">
-              <span className="h-px w-10 bg-accent" />
+              <Tick />
               <span className="text-[10px] uppercase tracking-[0.32em] text-accent">About the Studio</span>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-8 text-balance">
@@ -894,7 +1067,7 @@ const Index = ({ initialHash }: IndexProps) => {
           <ScrollReveal>
             <div className="max-w-3xl mb-20">
               <div className="flex items-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
+                <Tick />
                 <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Services</span>
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance mb-6">
@@ -953,7 +1126,7 @@ const Index = ({ initialHash }: IndexProps) => {
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
               <div className="max-w-2xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="h-px w-10 bg-accent" />
+                  <Tick />
                   <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Portfolio</span>
                 </div>
                 <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance">
@@ -997,18 +1170,20 @@ const Index = ({ initialHash }: IndexProps) => {
                   className="group block w-full text-left cursor-pointer"
                 >
                   <div className="relative overflow-hidden rounded-2xl aspect-[4/5] bg-card mb-5 shadow-soft">
-                    <picture>
-                      <source srcSet={toWebp(p.images[0], "thumb")} type="image/webp" />
-                      <img
-                        src={p.images[0]}
-                        alt={p.title}
-                        width={800}
-                        height={1000}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
-                      />
-                    </picture>
+                    <ImageReveal>
+                      <picture>
+                        <source srcSet={toWebp(p.images[0], "thumb")} type="image/webp" />
+                        <img
+                          src={p.images[0]}
+                          alt={p.title}
+                          width={800}
+                          height={1000}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                        />
+                      </picture>
+                    </ImageReveal>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-60 group-hover:opacity-90 transition-smooth" />
 
                     {/* Badge */}
@@ -1048,49 +1223,8 @@ const Index = ({ initialHash }: IndexProps) => {
         </div>
       </section>
 
-      {/* ============================ PROCESS ============================ */}
-      <section
-        id="process"
-        className="relative py-28 lg:py-36 px-6 lg:px-10 bg-muted/40 border-y border-border overflow-hidden"
-      >
-        {/* subtle glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto">
-          <ScrollReveal>
-            <div className="max-w-3xl mb-20">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
-                <span className="text-[10px] uppercase tracking-[0.32em] text-accent">The Process</span>
-              </div>
-              <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance mb-6">
-                Predictable, <em className="text-gradient-gold not-italic font-medium">repeatable</em> craft.
-              </h2>
-              <p className="text-foreground/65 leading-relaxed max-w-2xl">
-                Four stages — same on every project, whether it's a single bathroom or a 32-unit
-                pre-construction launch.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border rounded-2xl overflow-hidden shadow-soft">
-            {processSteps.map((step, i) => (
-              <ScrollReveal key={step.step} delay={i * 0.1}>
-                <div className="group relative h-full bg-card p-8 transition-smooth hover:bg-background">
-                  <span className="font-serif text-6xl text-accent/20 absolute top-6 right-6 transition-smooth group-hover:text-accent/45">
-                    {step.step}
-                  </span>
-                  <div className="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center mb-6">
-                    <step.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-serif text-2xl mb-3">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ============================ PROCESS (scroll-linked timeline) ============================ */}
+      <ProcessSection />
 
       {/* ============================ ABOUT US ============================ */}
       <section
@@ -1101,9 +1235,9 @@ const Index = ({ initialHash }: IndexProps) => {
           <ScrollReveal>
             <div className="text-center max-w-3xl mx-auto mb-20">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
+                <Tick />
                 <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Our Story</span>
-                <span className="h-px w-10 bg-accent" />
+                <Tick origin="right" />
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance mb-8">
                 A decade of turning <em className="text-gradient-gold not-italic font-medium">blueprints</em> into belief.
@@ -1138,26 +1272,27 @@ const Index = ({ initialHash }: IndexProps) => {
             </ScrollReveal>
 
             <ScrollReveal direction="right" delay={0.15}>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-8 rounded-2xl bg-card border border-border text-center shadow-soft">
-                  <Award className="w-6 h-6 text-accent mx-auto mb-3" />
-                  <div className="font-serif text-4xl text-primary mb-1">10+</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Years Experience</div>
-                </div>
-                <div className="p-8 rounded-2xl bg-card border border-border text-center shadow-soft">
-                  <Users className="w-6 h-6 text-accent mx-auto mb-3" />
-                  <div className="font-serif text-4xl text-primary mb-1">120+</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Happy Clients</div>
-                </div>
-                <div className="p-8 rounded-2xl bg-card border border-border text-center shadow-soft">
-                  <Target className="w-6 h-6 text-accent mx-auto mb-3" />
-                  <div className="font-serif text-4xl text-primary mb-1">500+</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Renders Delivered</div>
-                </div>
-                <div className="p-8 rounded-2xl bg-card border border-border text-center shadow-soft">
-                  <Clock className="w-6 h-6 text-accent mx-auto mb-3" />
-                  <div className="font-serif text-4xl text-primary mb-1">48h</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Avg. Turnaround</div>
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-elegant">
+                <ImageReveal>
+                  <picture>
+                    <source srcSet={toWebp("/assets/exterior-1.png")} type="image/webp" />
+                    <img
+                      src="/assets/exterior-1.png"
+                      alt="Residential exterior render"
+                      width={1200}
+                      height={900}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </ImageReveal>
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-[hsl(216_50%_15%/0.75)] backdrop-blur-md border border-white/15">
+                  <Sparkles className="w-4 h-4 text-accent flex-shrink-0" />
+                  <p className="text-xs uppercase tracking-[0.22em] text-white">
+                    Studio work — residential exterior
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
@@ -1175,7 +1310,7 @@ const Index = ({ initialHash }: IndexProps) => {
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
               <div className="max-w-2xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="h-px w-10 bg-accent" />
+                  <Tick />
                   <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Journal</span>
                 </div>
                 <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance">
@@ -1196,18 +1331,20 @@ const Index = ({ initialHash }: IndexProps) => {
                   className="group relative rounded-2xl bg-card border border-border overflow-hidden shadow-soft transition-smooth hover:border-primary/30 hover:shadow-elegant hover:-translate-y-1 cursor-pointer"
                 >
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <picture>
-                      <source srcSet={toWebp(post.image, "thumb")} type="image/webp" />
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        width={800}
-                        height={450}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                    </picture>
+                    <ImageReveal>
+                      <picture>
+                        <source srcSet={toWebp(post.image, "thumb")} type="image/webp" />
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          width={800}
+                          height={450}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                      </picture>
+                    </ImageReveal>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-accent/90 text-background text-[10px] uppercase tracking-[0.18em] font-semibold">
                       {post.category}
@@ -1251,9 +1388,9 @@ const Index = ({ initialHash }: IndexProps) => {
           <ScrollReveal>
             <div className="text-center max-w-2xl mx-auto mb-16">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
+                <Tick />
                 <span className="text-[10px] uppercase tracking-[0.32em] text-accent">Our Clients</span>
-                <span className="h-px w-10 bg-accent" />
+                <Tick origin="right" />
               </div>
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl leading-[1.05] text-balance">
                 Trusted by leading <em className="text-gradient-gold not-italic font-medium">builders</em> & designers.
@@ -1262,23 +1399,37 @@ const Index = ({ initialHash }: IndexProps) => {
           </ScrollReveal>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {clients.map((client, i) => (
-              <ScrollReveal key={client.name} delay={i * 0.06}>
-                <a
-                  href={client.url}
-                  target={client.url !== "#" ? "_blank" : undefined}
-                  rel={client.url !== "#" ? "noopener noreferrer" : undefined}
-                  className="group flex flex-col items-center justify-center gap-3 p-6 lg:p-8 rounded-2xl bg-card border border-border transition-smooth hover:border-primary/30 hover:bg-background cursor-pointer text-center min-h-[120px]"
-                >
-                  <span className="font-serif text-lg md:text-xl text-foreground/90 group-hover:text-foreground transition-smooth leading-tight">
+            {clients.map((client, i) => {
+              const isLink = client.url !== "#";
+              const inner = (
+                <>
+                  <span className="font-serif text-lg md:text-xl text-foreground/90 group-hover:text-foreground leading-tight transition-all duration-500 ease-out group-hover:tracking-[0.03em]">
                     {client.name}
                   </span>
-                  {client.url !== "#" && (
+                  {isLink && (
                     <ExternalLink className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-smooth" />
                   )}
-                </a>
-              </ScrollReveal>
-            ))}
+                </>
+              );
+              const cardClass =
+                "group flex flex-col items-center justify-center gap-3 p-6 lg:p-8 rounded-2xl bg-card border border-border transition-smooth hover:border-primary/30 text-center min-h-[120px]";
+              return (
+                <ScrollReveal key={client.name} delay={i * 0.06}>
+                  {isLink ? (
+                    <a
+                      href={client.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${cardClass} hover:bg-background cursor-pointer`}
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    <div className={cardClass}>{inner}</div>
+                  )}
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1292,9 +1443,9 @@ const Index = ({ initialHash }: IndexProps) => {
           <ScrollReveal>
             <div className="text-center mb-16">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="h-px w-10 bg-accent" />
+                <Tick />
                 <span className="text-[10px] uppercase tracking-[0.32em] text-accent">FAQ</span>
-                <span className="h-px w-10 bg-accent" />
+                <Tick origin="right" />
               </div>
               <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-balance">
                 Common <em className="text-gradient-gold not-italic font-medium">questions</em>.
@@ -1308,22 +1459,41 @@ const Index = ({ initialHash }: IndexProps) => {
                 <div className="rounded-2xl bg-card border border-border overflow-hidden transition-smooth hover:border-primary/20">
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    aria-expanded={openFaq === i}
+                    aria-controls={`faq-panel-${i}`}
                     className="w-full flex items-center justify-between gap-4 p-6 lg:p-8 text-left cursor-pointer group"
                   >
                     <span className="font-serif text-lg md:text-xl text-foreground group-hover:text-accent transition-smooth">
                       {faq.question}
                     </span>
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full border border-border flex items-center justify-center transition-smooth group-hover:border-accent group-hover:text-accent">
-                      {openFaq === i ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    {/* Plus morphs into minus — vertical bar rotates flat */}
+                    <span className="relative flex-shrink-0 w-8 h-8 rounded-full border border-border flex items-center justify-center transition-smooth group-hover:border-accent group-hover:text-accent">
+                      <span className="absolute w-3.5 h-px bg-current" />
+                      <motion.span
+                        animate={{ rotate: openFaq === i ? 0 : 90 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="absolute w-3.5 h-px bg-current"
+                      />
                     </span>
                   </button>
-                  {openFaq === i && (
-                    <div className="px-6 lg:px-8 pb-6 lg:pb-8">
-                      <p className="text-foreground/70 leading-relaxed border-t border-border pt-5">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {openFaq === i && (
+                      <motion.div
+                        id={`faq-panel-${i}`}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 lg:px-8 pb-6 lg:pb-8">
+                          <p className="text-foreground/70 leading-relaxed border-t border-border pt-5">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </ScrollReveal>
             ))}
@@ -1343,7 +1513,7 @@ const Index = ({ initialHash }: IndexProps) => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-16">
               <div className="lg:col-span-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="h-px w-10 bg-accent" />
+                  <Tick />
                   <span className="text-[10px] uppercase tracking-[0.32em] text-accent">
                     Let's Talk
                   </span>
@@ -1450,15 +1620,17 @@ const Index = ({ initialHash }: IndexProps) => {
                     >
                       Name *
                     </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your full name"
-                      className="bg-background border-border focus-visible:ring-accent h-12"
-                    />
+                    <div className="field-underline">
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        placeholder="Your full name"
+                        className="bg-background border-border focus-visible:ring-0 focus-visible:ring-offset-0 h-12"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label
@@ -1467,16 +1639,18 @@ const Index = ({ initialHash }: IndexProps) => {
                     >
                       Email *
                     </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="you@studio.com"
-                      className="bg-background border-border focus-visible:ring-accent h-12"
-                    />
+                    <div className="field-underline">
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        placeholder="you@studio.com"
+                        className="bg-background border-border focus-visible:ring-0 focus-visible:ring-offset-0 h-12"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -1487,15 +1661,17 @@ const Index = ({ initialHash }: IndexProps) => {
                   >
                     Phone
                   </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+1 (555) 123-4567"
-                    className="bg-background border-border focus-visible:ring-accent h-12"
-                  />
+                  <div className="field-underline">
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="+1 (555) 123-4567"
+                      className="bg-background border-border focus-visible:ring-0 focus-visible:ring-offset-0 h-12"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -1505,16 +1681,18 @@ const Index = ({ initialHash }: IndexProps) => {
                   >
                     Project Brief *
                   </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    placeholder="Tell us about your project — scope, timeline, references..."
-                    className="bg-background border-border focus-visible:ring-accent resize-none"
-                  />
+                  <div className="field-underline">
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                      rows={6}
+                      placeholder="Tell us about your project — scope, timeline, references..."
+                      className="bg-background border-border focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+                    />
+                  </div>
                 </div>
 
                 <button
@@ -1544,11 +1722,11 @@ const Index = ({ initialHash }: IndexProps) => {
             <div className="mt-24 lg:mt-32">
               <div className="text-center max-w-2xl mx-auto mb-10">
                 <div className="flex items-center justify-center gap-3 mb-5">
-                  <span className="h-px w-10 bg-accent" />
+                  <Tick />
                   <span className="text-[10px] uppercase tracking-[0.32em] text-accent">
                     Or Book Directly
                   </span>
-                  <span className="h-px w-10 bg-accent" />
+                  <Tick origin="right" />
                 </div>
                 <h3 className="font-serif text-3xl md:text-4xl leading-[1.1] text-balance">
                   Pick a 30-minute slot on our calendar.
@@ -1676,6 +1854,7 @@ const Index = ({ initialHash }: IndexProps) => {
         project={selected || projects[0]}
       />
     </div>
+    </MotionConfig>
   );
 };
 
