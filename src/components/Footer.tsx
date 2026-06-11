@@ -1,8 +1,22 @@
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 
-const handleAnchor = (id: string) => {
+const navLinks = [
+  { id: "home", label: "Home", path: "/" },
+  { id: "services", label: "Services", path: "/services" },
+  { id: "portfolio", label: "Portfolio", path: "/portfolio" },
+  { id: "process", label: "Process", path: "/process" },
+  { id: "about-us", label: "About Us", path: "/about" },
+  { id: "blog", label: "Blog", path: "/blog" },
+  { id: "contact", label: "Contact", path: "/contact" },
+];
+
+/* Smooth-scroll when the section exists on the current page; otherwise let the
+   real href navigate to the standalone route. */
+const handleAnchor = (e: React.MouseEvent, id: string) => {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
   history.replaceState(null, "", `#${id}`);
 };
 
@@ -25,26 +39,28 @@ const Footer = () => {
               Cinematic 3D visualizations for architects, developers and
               interior designers. Toronto-based, working nationally.
             </p>
-            <button
-              onClick={() => handleAnchor("contact")}
+            <a
+              href="/contact"
+              onClick={(e) => handleAnchor(e, "contact")}
               className="group inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-white hover:text-white/70 transition-smooth cursor-pointer"
             >
               Start a project
               <ArrowUpRight className="w-3.5 h-3.5 transition-smooth group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
+            </a>
           </div>
 
           <div className="lg:col-span-2">
             <h4 className="text-[10px] uppercase tracking-[0.28em] text-white/40 mb-4">Navigate</h4>
             <ul className="space-y-2.5">
-              {["home", "services", "portfolio", "process", "about-us", "blog", "contact"].map((id) => (
-                <li key={id}>
-                  <button
-                    onClick={() => handleAnchor(id)}
-                    className="text-sm text-white/60 hover:text-white transition-smooth cursor-pointer capitalize"
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href={link.path}
+                    onClick={(e) => handleAnchor(e, link.id)}
+                    className="text-sm text-white/60 hover:text-white transition-smooth cursor-pointer"
                   >
-                    {id === "about-us" ? "About Us" : id}
-                  </button>
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>

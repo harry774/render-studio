@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -20,10 +20,12 @@ export default defineConfig(({ mode }) => ({
       output: {
         // Split large, rarely-changing vendor code into its own cacheable chunks
         // so the app bundle stays small and animation code can load separately.
-        manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "motion-vendor": ["framer-motion"],
-        },
+        manualChunks: isSsrBuild
+          ? undefined
+          : {
+              "react-vendor": ["react", "react-dom", "react-router-dom"],
+              "motion-vendor": ["framer-motion"],
+            },
       },
     },
   },

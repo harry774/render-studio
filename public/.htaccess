@@ -1,0 +1,17 @@
+# Serve pre-rendered pages: real files and directories (e.g. /portfolio/) are
+# served as-is; anything else falls back to the SPA shell so client-side
+# routes never 404.
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Existing file or directory — serve it directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else — SPA fallback
+  RewriteRule ^ /index.html [L]
+</IfModule>

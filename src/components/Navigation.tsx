@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const sections = [
-  { id: "home", label: "Home" },
-  { id: "services", label: "Services" },
-  { id: "portfolio", label: "Portfolio" },
-  { id: "process", label: "Process" },
-  { id: "about-us", label: "About Us" },
-  { id: "blog", label: "Blog" },
-  { id: "contact", label: "Contact" },
+  { id: "home", label: "Home", path: "/" },
+  { id: "services", label: "Services", path: "/services" },
+  { id: "portfolio", label: "Portfolio", path: "/portfolio" },
+  { id: "process", label: "Process", path: "/process" },
+  { id: "about-us", label: "About Us", path: "/about" },
+  { id: "blog", label: "Blog", path: "/blog" },
+  { id: "contact", label: "Contact", path: "/contact" },
 ];
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("home");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -40,12 +42,20 @@ const Navigation = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleAnchor = (id: string) => {
+  /**
+   * On the one-page home, smooth-scroll to the section. On standalone pages
+   * (where the section isn't in the DOM) navigate to the real route instead.
+   * The href stays a real path either way so crawlers see proper links.
+   */
+  const handleAnchor = (e: React.MouseEvent, id: string, path: string) => {
+    e.preventDefault();
     setIsOpen(false);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
       history.replaceState(null, "", `#${id}`);
+    } else {
+      navigate(path);
     }
   };
 
@@ -61,27 +71,28 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="flex items-center justify-between h-16">
           {/* Small wordmark for header — white text on black */}
-          <button
-            onClick={() => handleAnchor("home")}
+          <a
+            href="/"
+            onClick={(e) => handleAnchor(e, "home", "/")}
             className="cursor-pointer hover:opacity-80 transition-smooth"
             aria-label="3D Renders Studio — Home"
           >
             <img
               src="/assets/nav-logo.svg"
               alt="3D Renders Studio"
-              //className="h-8 w-auto"
               className="h-11 w-auto mb-2"
             />
-          </button>
+          </a>
 
           {/* Desktop links */}
           <nav className="hidden md:flex items-center gap-1">
             {sections.map((s) => {
               const isActive = active === s.id;
               return (
-                <button
+                <a
                   key={s.id}
-                  onClick={() => handleAnchor(s.id)}
+                  href={s.path}
+                  onClick={(e) => handleAnchor(e, s.id, s.path)}
                   className={`relative px-4 py-2 text-[11px] uppercase tracking-[0.2em] transition-smooth cursor-pointer ${
                     isActive ? "text-white" : "text-white/55 hover:text-white"
                   }`}
@@ -90,19 +101,20 @@ const Navigation = () => {
                   {isActive && (
                     <span className="absolute left-4 right-4 -bottom-0.5 h-px bg-white" />
                   )}
-                </button>
+                </a>
               );
             })}
           </nav>
 
           {/* Desktop CTA */}
-          <button
-            onClick={() => handleAnchor("contact")}
+          <a
+            href="/contact"
+            onClick={(e) => handleAnchor(e, "contact", "/contact")}
             className="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full bg-accent text-background text-[11px] uppercase tracking-[0.16em] font-semibold hover:bg-accent/85 transition-smooth cursor-pointer"
           >
             Get Quote
             <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
+          </a>
 
           {/* Mobile trigger */}
           <button
@@ -130,24 +142,26 @@ const Navigation = () => {
               {sections.map((s) => {
                 const isActive = active === s.id;
                 return (
-                  <button
+                  <a
                     key={s.id}
-                    onClick={() => handleAnchor(s.id)}
+                    href={s.path}
+                    onClick={(e) => handleAnchor(e, s.id, s.path)}
                     className={`text-left px-4 py-3 rounded-lg text-sm uppercase tracking-[0.18em] transition-smooth cursor-pointer ${
                       isActive ? "text-white bg-white/10" : "text-white/60 hover:bg-white/5"
                     }`}
                   >
                     {s.label}
-                  </button>
+                  </a>
                 );
               })}
-              <button
-                onClick={() => handleAnchor("contact")}
+              <a
+                href="/contact"
+                onClick={(e) => handleAnchor(e, "contact", "/contact")}
                 className="mt-3 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent text-background text-xs uppercase tracking-[0.18em] font-semibold cursor-pointer"
               >
                 Get Quote
                 <ArrowUpRight className="w-4 h-4" />
-              </button>
+              </a>
             </div>
           </motion.div>
         )}
